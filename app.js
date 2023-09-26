@@ -3,6 +3,7 @@ require ('dotenv').config()
 const PORT = process.env.PORT || 3425
 const helmet = require('helmet')
 const sequel = require('./dbConnect')
+const users = require('./user')
 const app = express()
 
 app.use(helmet())
