@@ -2,7 +2,7 @@ const express = require('express')
 require ('dotenv').config()
 const PORT = process.env.PORT || 3425
 const helmet = require('helmet')
-
+const sequel = require('./dbConnect')
 const app = express()
 
 app.use(helmet())
@@ -10,8 +10,9 @@ app.use(helmet())
 
 
 
-const startServer=()=>{
+const startServer=async()=>{
     try {
+        await sequel.authenticate()
         app.listen(PORT,()=>{
             console.log(`server is running on http://localhost:${PORT}`);
         })

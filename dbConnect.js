@@ -1,4 +1,4 @@
-const {Sequlize} = reuire('sequelize')
+const {Sequelize} = require('sequelize')
 const dotEnv = require('dotenv').config()
 
 const DB_NAME = process.env.DB_NAME
