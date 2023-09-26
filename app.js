@@ -1,14 +1,27 @@
 const express = require('express')
 require ('dotenv').config()
 const PORT = process.env.PORT || 3425
+const APP_SECRET = process.env.APP_SECRET
 const helmet = require('helmet')
 const sequel = require('./dbConnect')
 const users = require('./user')
 const bcrypt = require('bcrypt')
+const expressSession = require('express-session')
 const app = express()
 
 app.use(helmet())
 app.use(express.urlencoded({ extended: false }));
+
+
+// session
+app.use(expressSession({
+    secret:APP_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie:{}
+}))
+
+
 // register a user
 app.post('/register', async(req,res)=>{
    try {
@@ -25,6 +38,8 @@ app.post('/register', async(req,res)=>{
    }
 })
 
+
+// Sign in 
 app.post('/login',async(req,res)=>{
     try {
         const {email,password} =req.body
@@ -39,12 +54,24 @@ app.post('/login',async(req,res)=>{
     if(!isCorrectPassword){
        return res.send('Invaild Credentials 😒')
     }
+    req.session.user =users.id
+    
     res.send('Logged in Successfully  🎉 🎊')
+    
     } catch (error) {
         console.log(error);
     }
 })
 
+// homepage
+app.get('/home', (req,res)=>{
+   try {
+    const userID= req.session.userID
+    res.send(userID);
+   } catch (error) {
+    console.log(error);
+   }
+})
 
 
 
