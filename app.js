@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 3425
 const helmet = require('helmet')
 const sequel = require('./dbConnect')
 const users = require('./user')
+const bcrypt = require('bcrypt')
 const app = express()
 
 app.use(helmet())
@@ -12,15 +13,19 @@ app.use(express.urlencoded({ extended: false }));
 app.post('/register', async(req,res)=>{
    try {
     const {first_name,last_name,email,password} = req.body
-    const results  =await  users.create({first_name,last_name,email,password})
+    //hashing password 
+    const hashPassword = await bcrypt.hash(password,10)
+    const results  =await  users.create({first_name,last_name,email,"password":hashPassword})
     if (results) {
-        return res.send('User created successfully')
+        return res.send(`User created successfully`)
     } 
     res.send('Unable to create user')
    } catch (error) {
     console.log(error);
    }
 })
+
+
 
 
 
