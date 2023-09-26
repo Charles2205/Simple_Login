@@ -6,22 +6,22 @@ const User = dbConnect.define('Users',{
         autoIncrement:true,
         type:DataTypes.INTEGER
     },
-        first_name:{
+    first_name:{
             type:DataTypes.STRING,
             allowNull: false
-        },
-        last_name:{
+    },
+    last_name:{
             type:DataTypes.STRING,
             allowNull: false
-        },
-        email:{
+    },
+    email:{
             type:DataTypes.STRING,
             allowNull: false
-        },
-        password:{
+    },
+    password:{
             type:DataTypes.TEXT,
             allowNull: false
-        }
+    }
 })
 User.sync({ alter: true })
 module.exports=User
