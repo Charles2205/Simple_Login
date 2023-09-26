@@ -25,7 +25,21 @@ app.post('/register', async(req,res)=>{
    }
 })
 
-
+app.post('/login',async(req,res)=>{
+    const {email,password} =req.body
+    //   check if the username is vaild in the database
+    const results = await users.findOne({where:{email}})
+    if(!results){
+        return  res.send('Invaild Credentials 😒')
+    }
+    const correctPassword = results.password
+    // comparing hashed pass with current password
+    const isCorrectPassword =await bcrypt.compare(password,correctPassword)
+    if(!isCorrectPassword){
+       return res.send('Invaild Credentials 😒')
+    }
+    res.send('Logged in Successfully  🎉 🎊')
+})
 
 
 
