@@ -26,7 +26,8 @@ app.post('/register', async(req,res)=>{
 })
 
 app.post('/login',async(req,res)=>{
-    const {email,password} =req.body
+    try {
+        const {email,password} =req.body
     //   check if the username is vaild in the database
     const results = await users.findOne({where:{email}})
     if(!results){
@@ -39,6 +40,9 @@ app.post('/login',async(req,res)=>{
        return res.send('Invaild Credentials 😒')
     }
     res.send('Logged in Successfully  🎉 🎊')
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 
