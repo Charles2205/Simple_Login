@@ -1,8 +1,8 @@
 # Simple_Login
 A basic login logics tested with Postman
 # Tools & Libraries
-1. <a href="https://expressjs.com"</a>
-2. <a href="https://yarnpkg.com/package?q=bcr&name=bcrypt"</a>
+1. <a href="https://expressjs.com">Express</a>
+2. <a href="https://yarnpkg.com/package?q=bcr&name=bcrypt">Bcrypt</a>
 
 
 
