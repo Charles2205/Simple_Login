@@ -21,6 +21,19 @@ app.use(expressSession({
     cookie:{}
 }))
 
+// midddlewares
+const isUserSignIn =(req,res,next)=>{
+    try {
+        if(req.session.user){
+            return next()
+            
+        }
+        res.send('Login First')
+    } catch (error) {
+        console.log(error);
+    }
+
+}
 
 // register a user
 app.post('/register', async(req,res)=>{
@@ -54,9 +67,10 @@ app.post('/login',async(req,res)=>{
     if(!isCorrectPassword){
        return res.send('Invaild Credentials 😒')
     }
-    req.session.user =users.id
+    req.session.user =results.id
     
-    res.send('Logged in Successfully  🎉 🎊')
+    res.send(`Logged in Successfully  🎉 🎊`)
+    console.log(req.session.user)
     
     } catch (error) {
         console.log(error);
@@ -64,10 +78,9 @@ app.post('/login',async(req,res)=>{
 })
 
 // homepage
-app.get('/home', (req,res)=>{
+app.get('/', isUserSignIn,(req,res)=>{
    try {
-    const userID= req.session.userID
-    res.send(userID);
+    res.send('Hello Charles')
    } catch (error) {
     console.log(error);
    }
