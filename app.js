@@ -1,14 +1,40 @@
 const express = require('express')
 require ('dotenv').config()
 const PORT = process.env.PORT || 3425
+const APP_SECRET = process.env.APP_SECRET
 const helmet = require('helmet')
 const sequel = require('./dbConnect')
 const users = require('./user')
 const bcrypt = require('bcrypt')
+const expressSession = require('express-session')
 const app = express()
 
 app.use(helmet())
 app.use(express.urlencoded({ extended: false }));
+
+
+// session
+app.use(expressSession({
+    secret:APP_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie:{}
+}))
+
+// midddlewares
+const isUserSignIn =(req,res,next)=>{
+    try {
+        if(req.session.user){
+            return next()
+            
+        }
+        res.send('Login First')
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 // register a user
 app.post('/register', async(req,res)=>{
    try {
@@ -25,8 +51,11 @@ app.post('/register', async(req,res)=>{
    }
 })
 
+
+// Sign in 
 app.post('/login',async(req,res)=>{
-    const {email,password} =req.body
+    try {
+        const {email,password} =req.body
     //   check if the username is vaild in the database
     const results = await users.findOne({where:{email}})
     if(!results){
@@ -38,9 +67,24 @@ app.post('/login',async(req,res)=>{
     if(!isCorrectPassword){
        return res.send('Invaild Credentials 😒')
     }
-    res.send('Logged in Successfully  🎉 🎊')
+    req.session.user =results.id
+    
+    res.send(`Logged in Successfully  🎉 🎊`)
+    console.log(req.session.user)
+    
+    } catch (error) {
+        console.log(error);
+    }
 })
 
+// homepage
+app.get('/', isUserSignIn,(req,res)=>{
+   try {
+    res.send('Hello Charles')
+   } catch (error) {
+    console.log(error);
+   }
+})
 
 
 
@@ -48,7 +92,7 @@ const startServer=async()=>{
     try {
         await sequel.authenticate()
         app.listen(PORT,()=>{
-            console.log(`server is running on http://localhost:${PORT}`);
+            console.log(`\x1b[32m Server is running on \x1b[31m http://localhost:${PORT} \x1b[33m`);
         })
     } catch (error) {
         console.log(error);
